@@ -1,0 +1,21 @@
+{
+
+  "Custom Layers": [
+
+    {
+      "title": "Napoleon in Russia",
+      "id": "Mapbox.dclure.jn50i50k",
+      "type": "XYZ",
+      "properties": {
+        "urls": [
+          "http://a.tiles.mapbox.com/v3/dclure.jn50i50k/${z}/${x}/${y}.png",
+          "http://b.tiles.mapbox.com/v3/dclure.jn50i50k/${z}/${x}/${y}.png",
+          "http://c.tiles.mapbox.com/v3/dclure.jn50i50k/${z}/${x}/${y}.png",
+          "http://d.tiles.mapbox.com/v3/dclure.jn50i50k/${z}/${x}/${y}.png"
+        ]
+      }
+    }
+
+  ]
+
+}
