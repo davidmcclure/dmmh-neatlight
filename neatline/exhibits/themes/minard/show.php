@@ -23,7 +23,7 @@
 
 <!-- Transcription. -->
 <div id="neatline-narrative">
-  <h1>Test</h1>
+  <?php include('text.php'); ?>
 </div>
 
 <?php echo foot(); ?>
