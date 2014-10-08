@@ -1,0 +1,7 @@
+
+compile:
+  - less
+
+default:
+  - compile
+  - watch

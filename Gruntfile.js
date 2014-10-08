@@ -8,27 +8,38 @@
 
 module.exports = function(grunt) {
 
-  require('load-grunt-tasks')(grunt);
+  require('time-grunt')(grunt);
+  require('jit-grunt')(grunt);
 
-  grunt.initConfig({
-
-    stylus: {
-      dist: {
-        files: {
-          'css/style.css': 'css/style.styl'
-        }
-      }
-    },
-
-    watch: {
-      dist: {
-        files: 'css/style.styl',
-        tasks: ['stylus']
-      }
-    }
-
+  require('load-grunt-config')(grunt, {
+    loadGruntTasks: false
   });
 
-  grunt.registerTask('default', 'stylus');
-
 };
+
+//module.exports = function(grunt) {
+
+  //require('load-grunt-tasks')(grunt);
+
+  //grunt.initConfig({
+
+    //stylus: {
+      //dist: {
+        //files: {
+          //'css/style.css': 'css/style.styl'
+        //}
+      //}
+    //},
+
+    //watch: {
+      //dist: {
+        //files: 'css/style.styl',
+        //tasks: ['stylus']
+      //}
+    //}
+
+  //});
+
+  //grunt.registerTask('default', 'stylus');
+
+//};
