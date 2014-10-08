@@ -16,7 +16,7 @@
 )); ?>
 
 <!-- Site Title -->
-<p class="title"><?php echo get_option('site_title'); ?></p>
+<h3 class="title"><?php echo get_option('site_title'); ?></h3>
 
 <?php if (nl_exhibitsHaveBeenCreated()): ?>
   <div class="list">
