@@ -28,6 +28,10 @@
     <?php echo head_css(false); ?>
     <?php echo head_js(false); ?>
 
+    <!-- Typekit. -->
+    <script src="//use.typekit.net/ray7ejh.js"></script>
+    <script>try{Typekit.load();}catch(e){}</script>
+
   </head>
 
   <?php echo body_tag(array('id' => @$bodyid, 'class' => @$bodyclass)); ?>
