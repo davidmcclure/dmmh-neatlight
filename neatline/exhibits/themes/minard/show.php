@@ -9,8 +9,6 @@
 
 ?>
 
-<?php queue_css_file('style'); ?>
-
 <?php echo head(array(
   'title' => nl_getExhibitField('title'),
   'bodyclass' => 'neatline show'
