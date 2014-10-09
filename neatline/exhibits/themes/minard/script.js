@@ -9517,7 +9517,7 @@ Neatline.module('Chart', function(Chart) {
         .style('display', 'none');
 
       // Focus circle.
-      this.focus.append('circle')
+      this.circle = this.focus.append('circle')
         .attr('r', 4);
 
       // Cursor events target.
