@@ -8,7 +8,7 @@ module.exports = {
 
   dist: {
     files: ['src/**/*', '*.php'],
-    tasks: 'compile'
+    tasks: 'compile:min'
   }
 
 };

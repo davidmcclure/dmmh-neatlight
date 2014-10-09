@@ -30,4 +30,4 @@
 <div id="chart"></div>
 <hr />
 
-<small>Map from <a href="http://commons.wikimedia.org/wiki/File:Minard.png" target="_blank">Wikipedia</a>. Built as part of the <a href="http://www.northeastern.edu/nulab/dmmh" target="_blank">NEH Workshop Digital Methods for Military History</a> at Northeastern University.</small>
+<small>Map from <a href="http://commons.wikimedia.org/wiki/File:Minard.png" target="_blank">Wikipedia</a>. Built for the <a href="http://www.northeastern.edu/nulab/dmmh" target="_blank">NEH Workshop Digital Methods for Military History</a> at Northeastern University.</small>
