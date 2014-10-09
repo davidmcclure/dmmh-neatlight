@@ -21,9 +21,13 @@ Neatline.module('Chart', function(Chart) {
      * @param {Object} options
      */
     initialize: function(options) {
+
+      this.slug = options.slug;
       this.records = options.records;
+
       this._initGraph();
       this._initFocus();
+
     },
 
 
@@ -159,6 +163,7 @@ Neatline.module('Chart', function(Chart) {
       // Hide on blur.
       this.rect.on('mouseout', function() {
         self.focus.style('display', 'none');
+        Neatline.execute('EVENTS:unhighlightCurrent');
       });
 
       // Bisect on the X-axis.
@@ -178,14 +183,9 @@ Neatline.module('Chart', function(Chart) {
       // Hover.
       this.rect.on('mousemove', function() {
 
+        // Set the focus.
         var d = getNearest.call(this);
-
-        // Get the coordinates.
-        var x = self.xScale(d.date);
-        var y = self.yScale(d.troops);
-
-        // Render the focus.
-        self.focus.attr('transform', 'translate('+x+','+y+')');
+        self.setFocus(d);
 
         // Highlight the record.
         self.publish('highlight', d.slug);
@@ -197,6 +197,39 @@ Neatline.module('Chart', function(Chart) {
         var d = getNearest.call(this);
         self.publish('select', d.slug);
       });
+
+    },
+
+
+    /**
+     * Display the focus container.
+     */
+    showFocus: function() {
+      this.focus.style('display', null);
+    },
+
+
+    /**
+     * Hide the focus container.
+     */
+    hideFocus: function() {
+      this.focus.style('display', 'none');
+    },
+
+
+    /**
+     * Set the position of the focus dot/line.
+     *
+     * @param {Object} d
+     */
+    setFocus: function(d) {
+
+      // Get the coordinates.
+      var x = this.xScale(d.date);
+      var y = this.yScale(d.troops);
+
+      // Render the focus.
+      this.focus.attr('transform', 'translate('+x+','+y+')');
 
     },
 
