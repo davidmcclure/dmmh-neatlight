@@ -9419,7 +9419,7 @@ Neatline.module('Chart', function(Chart) {
 
       // Dimensions.
       this.width = 300 - this.margin.left - this.margin.right;
-      this.height = 400 - this.margin.top - this.margin.bottom;
+      this.height = 300 - this.margin.top - this.margin.bottom;
 
       // Vertical/horizontal margins.
       var vMargin = this.margin.top + this.margin.bottom;

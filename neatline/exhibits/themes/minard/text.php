@@ -15,13 +15,19 @@
     target="_blank">@clured</a></span>,
   <span>with <a
     href="http://omeka.org"
-    target="_blank">Omeka</a></span>
-  <span>and <a
+    target="_blank">Omeka</a>,</span>
+  <span><a
     href="http://neatline.org"
-    target="_blank">Neatline</a>.</span>
+    target="_blank">Neatline</a>,</span>
+  <span>and <a
+    href="http://mapbox.com"
+    target="_blank">Mapbox</a>.</span>
 </div>
 
 <h1>Minard + Napoleon</h1>
 <hr />
 
 <div id="chart"></div>
+<hr />
+
+<small>Map from <a href="http://commons.wikimedia.org/wiki/File:Minard.png" target="_blank">Wikipedia</a>. Built as part of the <a href="http://www.northeastern.edu/nulab/dmmh" target="_blank">NEH Workshop Digital Methods for Military History</a> at Northeastern University.</small>
