@@ -14,11 +14,12 @@ Neatline.module('Chart', function(Chart) {
 
     slug: 'CHART',
 
-    events: [
-      'highlight',
-      'unhighlight',
-      { unselect: 'unhighlight' }
-    ],
+    events: [{
+      highlight:    'focus',
+      select:       'focus',
+      unhighlight:  'unfocus',
+      unselect:     'unfocus'
+    }],
 
 
     /**
@@ -39,7 +40,7 @@ Neatline.module('Chart', function(Chart) {
      *
      * @param {Object} args
      */
-    highlight: function(args) {
+    focus: function(args) {
 
       var slug = args.model.get('slug');
 
@@ -58,7 +59,7 @@ Neatline.module('Chart', function(Chart) {
      *
      * @param {Object} args
      */
-    unhighlight: function(args) {
+    unfocus: function(args) {
       if (args.source == 'MAP') {
         this.view.hideFocus();
       }
