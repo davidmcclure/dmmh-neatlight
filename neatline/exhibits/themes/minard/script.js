@@ -9350,17 +9350,23 @@ Neatline.module('Chart', function(Chart) {
      */
     initialize: function() {
 
-      // Get dimensions.
-      var w = 200;
-      var h = 200;
+      var margin = {
+        top:    20,
+        right:  30,
+        bottom: 30,
+        left:   50
+      };
+
+      var w = 300 - margin.left - margin.right;
+      var h = 400 - margin.top - margin.bottom;
 
       // Inject the SVG container.
       this.svg = d3.select(this.el)
         .append('svg')
-        .attr('width', 300)
-        .attr('height', 200)
+        .attr('width', w + margin.left + margin.right)
+        .attr('height', h + margin.top + margin.bottom)
         .append('g')
-        .attr('transform', 'translate(25,25)');
+        .attr('transform', 'translate('+margin.left+','+margin.top+')');
 
       // X-axis scale.
       var x = d3.time.scale()
