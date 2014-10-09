@@ -17,9 +17,11 @@ Neatline.module('Chart', function(Chart) {
 
     /**
      * Create the view.
+     *
+     * @param {Object} records
      */
-    init: function() {
-      this.view = new Neatline.Chart.View();
+    init: function(records) {
+      this.view = new Neatline.Chart.View({ records: records });
     }
 
 

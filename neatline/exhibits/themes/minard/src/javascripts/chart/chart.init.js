@@ -9,8 +9,8 @@
 Neatline.module('Chart', function(Chart) {
 
 
-  Chart.addInitializer(function() {
-    Chart.__controller = new Neatline.Chart.Controller();
+  Neatline.vent.once('MAP:ingest', function(records) {
+    Chart.__controller = new Neatline.Chart.Controller(records);
   });
 
 

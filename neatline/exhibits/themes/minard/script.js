@@ -9255,9 +9255,11 @@ Neatline.module('Chart', function(Chart) {
 
     /**
      * Create the view.
+     *
+     * @param {Object} records
      */
-    init: function() {
-      this.view = new Neatline.Chart.View();
+    init: function(records) {
+      this.view = new Neatline.Chart.View({ records: records });
     }
 
 
@@ -9278,33 +9280,32 @@ Neatline.module('Chart', function(Chart) {
 
 
   Chart.data = [
-    ['1812-06-24', 422000],
-    ['1812-06-28', 400000],
-    ['1812-07-05', 375000],
-    ['1812-07-12', 350000],
-    ['1812-07-19', 300000],
-    ['1812-07-26', 250000],
-    ['1812-08-02', 225000],
-    ['1812-08-09', 200000],
-    ['1812-08-16', 175000],
-    ['1812-08-28', 145000],
-    ['1812-09-07', 127100],
-    ['1812-09-14', 100000],
-    ['1812-09-14', 100000],
-    ['1812-10-18', 100000],
-    ['1812-10-26', 96000],
-    ['1812-11-03', 87000],
-    ['1812-11-09', 55000],
-    ['1812-11-14', 37000],
-    ['1812-11-19', 24000],
-    ['1812-11-24', 30000],
-    ['1812-11-28', 50000],
-    ['1812-12-01', 28000],
-    ['1812-12-06', 12000],
-    ['1812-12-07', 14000],
-    ['1812-12-09', 8000],
-    ['1812-12-11', 4000],
-    ['1812-12-14', 10000]
+    { date: '1812-06-24', troops: 422000, slug: 's1' },
+    { date: '1812-06-28', troops: 400000, slug: 's2' },
+    { date: '1812-07-05', troops: 375000, slug: 's3' },
+    { date: '1812-07-12', troops: 350000, slug: 's4' },
+    { date: '1812-07-19', troops: 300000, slug: 's5' },
+    { date: '1812-07-26', troops: 250000, slug: 's6' },
+    { date: '1812-08-02', troops: 225000, slug: 's7' },
+    { date: '1812-08-09', troops: 200000, slug: 's8' },
+    { date: '1812-08-16', troops: 175000, slug: 's9' },
+    { date: '1812-08-28', troops: 145000, slug: 's10' },
+    { date: '1812-09-07', troops: 127100, slug: 's11' },
+    { date: '1812-09-14', troops: 100000, slug: 's12' },
+    { date: '1812-10-18', troops: 100000, slug: 's13' },
+    { date: '1812-10-26', troops: 96000,  slug: 's14' },
+    { date: '1812-11-03', troops: 87000,  slug: 's15' },
+    { date: '1812-11-09', troops: 55000,  slug: 's16' },
+    { date: '1812-11-14', troops: 37000,  slug: 's17' },
+    { date: '1812-11-19', troops: 24000,  slug: 's18' },
+    { date: '1812-11-24', troops: 30000,  slug: 's19' },
+    { date: '1812-11-28', troops: 50000,  slug: 's20' },
+    { date: '1812-12-01', troops: 28000,  slug: 's21' },
+    { date: '1812-12-06', troops: 12000,  slug: 's22' },
+    { date: '1812-12-07', troops: 14000,  slug: 's23' },
+    { date: '1812-12-09', troops: 8000,   slug: 's24' },
+    { date: '1812-12-11', troops: 8000,   slug: 's25' },
+    { date: '1812-12-14', troops: 10000,  slug: 's26' }
   ];
 
 
@@ -9321,8 +9322,8 @@ Neatline.module('Chart', function(Chart) {
 Neatline.module('Chart', function(Chart) {
 
 
-  Chart.addInitializer(function() {
-    Chart.__controller = new Neatline.Chart.Controller();
+  Neatline.vent.once('MAP:ingest', function(records) {
+    Chart.__controller = new Neatline.Chart.Controller(records);
   });
 
 
@@ -9347,8 +9348,11 @@ Neatline.module('Chart', function(Chart) {
 
     /**
      * Build the graph.
+     *
+     * @param {Object} options
      */
-    initialize: function() {
+    initialize: function(options) {
+      this.records = options.records;
       this._initGraph();
       this._initFocus();
     },
@@ -9411,10 +9415,10 @@ Neatline.module('Chart', function(Chart) {
       // Line builder.
       this.line = d3.svg.line()
         .x(function(d) {
-          return self.xScale(d[0]);
+          return self.xScale(d.date);
         })
         .y(function(d) {
-          return self.yScale(d[1]);
+          return self.yScale(d.troops);
         });
 
       // ISO8601 parser.
@@ -9422,17 +9426,18 @@ Neatline.module('Chart', function(Chart) {
 
       // Parse the dates.
       this.data = _.map(Chart.data, function(d) {
-        return [parseDate(d[0]), d[1]];
+        d.date = parseDate(d.date);
+        return d;
       });
 
       // X-axis bounds.
       this.xScale.domain(d3.extent(this.data, function(d) {
-        return d[0];
+        return d.date;
       }));
 
       // Y-axis bounds.
       this.yScale.domain(d3.extent(this.data, function(d) {
-        return d[1];
+        return d.troops;
       }));
 
       // Render the X-axis.
@@ -9489,26 +9494,59 @@ Neatline.module('Chart', function(Chart) {
 
       // Bisect on the X-axis.
       var bisect = d3.bisector(function(d) {
-        return d[0];
+        return d.date;
       });
 
-      // Focus.
-      this.rect.on('mousemove', function(e) {
-
-        // Get the nearest data point.
+      // Get the nearest data point.
+      var getNearest = function() {
         var x0 = self.xScale.invert(d3.mouse(this)[0]);
         var i = bisect.left(self.data, x0, 1);
         var d0 = self.data[i-1];
         var d1 = self.data[i];
-        var d = x0 - d0[0] > d1[0] - x0 ? d1 : d0;
+        return x0 - d0.date > d1.date - x0 ? d1 : d0;
+      };
+
+      // Hover.
+      this.rect.on('mousemove', function() {
+
+        var d = getNearest.call(this);
 
         // Get the coordinates.
-        var x = self.xScale(d[0]);
-        var y = self.yScale(d[1]);
+        var x = self.xScale(d.date);
+        var y = self.yScale(d.troops);
 
         // Render the focus.
         self.focus.attr('transform', 'translate('+x+','+y+')');
 
+        // Highlight the record.
+        self.publish('highlight', d.slug);
+
+      });
+
+      // Click.
+      this.rect.on('click', function() {
+        var d = getNearest.call(this);
+        self.publish('select', d.slug);
+      });
+
+    },
+
+
+    /**
+     * Construct axes and time-series line.
+     *
+     * @param {String} event
+     * @param {String} slug
+     */
+    publish: function(event, slug) {
+
+      // Pop out the record.
+      var record = this.records.findWhere({ slug: slug });
+      if (!record) return;
+
+      // Publish the event.
+      Neatline.vent.trigger(event, {
+        model: record, source: this.slug
       });
 
     }

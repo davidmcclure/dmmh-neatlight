@@ -17,8 +17,11 @@ Neatline.module('Chart', function(Chart) {
 
     /**
      * Build the graph.
+     *
+     * @param {Object} options
      */
-    initialize: function() {
+    initialize: function(options) {
+      this.records = options.records;
       this._initGraph();
       this._initFocus();
     },
@@ -81,10 +84,10 @@ Neatline.module('Chart', function(Chart) {
       // Line builder.
       this.line = d3.svg.line()
         .x(function(d) {
-          return self.xScale(d[0]);
+          return self.xScale(d.date);
         })
         .y(function(d) {
-          return self.yScale(d[1]);
+          return self.yScale(d.troops);
         });
 
       // ISO8601 parser.
@@ -92,17 +95,18 @@ Neatline.module('Chart', function(Chart) {
 
       // Parse the dates.
       this.data = _.map(Chart.data, function(d) {
-        return [parseDate(d[0]), d[1]];
+        d.date = parseDate(d.date);
+        return d;
       });
 
       // X-axis bounds.
       this.xScale.domain(d3.extent(this.data, function(d) {
-        return d[0];
+        return d.date;
       }));
 
       // Y-axis bounds.
       this.yScale.domain(d3.extent(this.data, function(d) {
-        return d[1];
+        return d.troops;
       }));
 
       // Render the X-axis.
@@ -159,26 +163,59 @@ Neatline.module('Chart', function(Chart) {
 
       // Bisect on the X-axis.
       var bisect = d3.bisector(function(d) {
-        return d[0];
+        return d.date;
       });
 
-      // Focus.
-      this.rect.on('mousemove', function(e) {
-
-        // Get the nearest data point.
+      // Get the nearest data point.
+      var getNearest = function() {
         var x0 = self.xScale.invert(d3.mouse(this)[0]);
         var i = bisect.left(self.data, x0, 1);
         var d0 = self.data[i-1];
         var d1 = self.data[i];
-        var d = x0 - d0[0] > d1[0] - x0 ? d1 : d0;
+        return x0 - d0.date > d1.date - x0 ? d1 : d0;
+      };
+
+      // Hover.
+      this.rect.on('mousemove', function() {
+
+        var d = getNearest.call(this);
 
         // Get the coordinates.
-        var x = self.xScale(d[0]);
-        var y = self.yScale(d[1]);
+        var x = self.xScale(d.date);
+        var y = self.yScale(d.troops);
 
         // Render the focus.
         self.focus.attr('transform', 'translate('+x+','+y+')');
 
+        // Highlight the record.
+        self.publish('highlight', d.slug);
+
+      });
+
+      // Click.
+      this.rect.on('click', function() {
+        var d = getNearest.call(this);
+        self.publish('select', d.slug);
+      });
+
+    },
+
+
+    /**
+     * Construct axes and time-series line.
+     *
+     * @param {String} event
+     * @param {String} slug
+     */
+    publish: function(event, slug) {
+
+      // Pop out the record.
+      var record = this.records.findWhere({ slug: slug });
+      if (!record) return;
+
+      // Publish the event.
+      Neatline.vent.trigger(event, {
+        model: record, source: this.slug
       });
 
     }
