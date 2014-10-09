@@ -149,6 +149,22 @@ Neatline.module('Chart', function(Chart) {
       this.circle = this.focus.append('circle')
         .attr('r', 4);
 
+      this.xLine = this.svg.append('line')
+        .attr('class', 'cursor')
+        .style('display', 'none')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', 0)
+        .attr('y2', this.height);
+
+      this.yLine = this.svg.append('line')
+        .attr('class', 'cursor')
+        .style('display', 'none')
+        .attr('x1', 0)
+        .attr('y1', 0)
+        .attr('x2', this.width)
+        .attr('y2', 0);
+
       // Cursor events target.
       this.rect = this.svg.append('rect')
         .attr('class', 'overlay')
@@ -157,12 +173,12 @@ Neatline.module('Chart', function(Chart) {
 
       // Show on hover.
       this.rect.on('mouseover', function() {
-        self.focus.style('display', null);
+        self.showFocus();
       });
 
       // Hide on blur.
       this.rect.on('mouseout', function() {
-        self.focus.style('display', 'none');
+        self.hideFocus();
         Neatline.execute('EVENTS:unhighlightCurrent');
       });
 
@@ -206,6 +222,8 @@ Neatline.module('Chart', function(Chart) {
      */
     showFocus: function() {
       this.focus.style('display', null);
+      this.xLine.style('display', null);
+      this.yLine.style('display', null);
     },
 
 
@@ -214,6 +232,8 @@ Neatline.module('Chart', function(Chart) {
      */
     hideFocus: function() {
       this.focus.style('display', 'none');
+      this.xLine.style('display', 'none');
+      this.yLine.style('display', 'none');
     },
 
 
@@ -228,8 +248,10 @@ Neatline.module('Chart', function(Chart) {
       var x = this.xScale(d.date);
       var y = this.yScale(d.troops);
 
-      // Render the focus.
+      // Render the dot.
       this.focus.attr('transform', 'translate('+x+','+y+')');
+      this.xLine.attr('transform', 'translate('+x+',0)');
+      this.yLine.attr('transform', 'translate(0,'+y+')');
 
     },
 
